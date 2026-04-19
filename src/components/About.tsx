@@ -61,15 +61,6 @@ const aiTechnologies = [
   }
 ];
 
-const ragSteps = [
-  { label: '文档加载', icon: '📄', desc: 'PDF/Word/TXT' },
-  { label: '文本分块', icon: '✂️', desc: '滑动窗口切片' },
-  { label: '向量化', icon: '�', desc: 'Embedding Model' },
-  { label: '存入向量库', icon: '💾', desc: 'Pinecone/Milvus' },
-  { label: '语义检索', icon: '�', desc: 'Top-K 相似匹配' },
-  { label: '增强生成', icon: '✨', desc: 'Context + LLM' }
-];
-
 const techStack = [
   { name: 'MiniMax-M2.7', category: 'LLM' },
   { name: 'GLM-5.1', category: 'LLM' },
