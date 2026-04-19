@@ -6,7 +6,6 @@ export default function Hero() {
   const { scrollY } = useScroll();
   const y1 = useTransform(scrollY, [0, 500], [0, 150]);
   const y2 = useTransform(scrollY, [0, 500], [0, -100]);
-  const opacity = useTransform(scrollY, [0, 300], [1, 0]);
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -49,7 +48,6 @@ export default function Hero() {
         variants={containerVariants}
         initial="hidden"
         animate="visible"
-        style={{ opacity }}
       >
         <div className="flex flex-col lg:flex-row items-center gap-12 lg:gap-20">
           <motion.div
