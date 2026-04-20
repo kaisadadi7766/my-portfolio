@@ -1,6 +1,4 @@
 import { motion } from 'framer-motion';
-import { useState } from 'react';
-import DOMPurify from 'dompurify';
 
 const socialLinks = [
   {
@@ -32,37 +30,35 @@ const socialLinks = [
   }
 ];
 
+const contactMethods = [
+  {
+    icon: (
+      <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+      </svg>
+    ),
+    label: '邮箱',
+    value: 'hello@example.com',
+    href: 'mailto:hello@example.com',
+    color: 'from-red-500 to-orange-500'
+  },
+  {
+    icon: (
+      <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+      </svg>
+    ),
+    label: '位置',
+    value: '广东，中国',
+    href: null,
+    color: 'from-orange-500 to-yellow-500'
+  }
+];
+
 export default function Contact() {
-  const [formState, setFormState] = useState({ name: '', email: '', message: '' });
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [submitted, setSubmitted] = useState(false);
-
-  const sanitizeInput = (input: string): string => {
-    return DOMPurify.sanitize(input, {
-      ALLOWED_TAGS: [],
-      ALLOWED_ATTR: []
-    });
-  };
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsSubmitting(true);
-    sanitizeInput(formState.name);
-
-    setTimeout(() => {
-      setIsSubmitting(false);
-      setSubmitted(true);
-      setFormState({ name: '', email: '', message: '' });
-    }, 1500);
-  };
-
-  const handleChange = (field: 'name' | 'email' | 'message', value: string) => {
-    const sanitized = sanitizeInput(value);
-    setFormState(prev => ({ ...prev, [field]: sanitized }));
-  };
-
   return (
-    <section id="contact" className="py-24 bg-gradient-to-b from-white to-red-50" aria-labelledby="contact-heading">
+    <section id="contact" className="py-24 bg-gradient-to-b from-white to-red-50/30" aria-labelledby="contact-heading">
       <div className="max-w-6xl mx-auto px-6">
         <motion.div
           initial={{ opacity: 0, y: 40 }}
@@ -82,166 +78,109 @@ export default function Contact() {
           <div className="w-20 h-1 bg-gradient-to-r from-red-600 to-orange-500 mx-auto rounded-full mt-6" />
         </motion.div>
 
-        <div className="grid lg:grid-cols-2 gap-16">
-          <motion.div
-            initial={{ opacity: 0, x: -40 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8, ease: "easeOut" }}
-            className="space-y-8"
-          >
-            <div className="bg-white p-8 rounded-2xl shadow-lg shadow-gray-200/50">
-              <h3 className="text-2xl font-bold text-gray-900 mb-6">发送邮件</h3>
-
-              {submitted ? (
-                <motion.div
-                  initial={{ opacity: 0, scale: 0.9 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  className="text-center py-8"
-                  role="alert"
-                  aria-live="polite"
-                >
-                  <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <svg className="w-8 h-8 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                    </svg>
-                  </div>
-                  <p className="text-lg font-medium text-gray-900" role="status">消息已发送！</p>
-                  <p className="text-gray-600 mt-2">我会尽快回复你</p>
-                </motion.div>
-              ) : (
-                <form onSubmit={handleSubmit} className="space-y-5" aria-label="联系表单">
-                  <div>
-                    <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2">姓名</label>
-                    <input
-                      type="text"
-                      id="name"
-                      name="name"
-                      value={formState.name}
-                      onChange={(e) => handleChange('name', e.target.value)}
-                      className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-red-500 focus:border-transparent outline-none transition-all duration-300"
-                      placeholder="你的姓名"
-                      required
-                      maxLength={100}
-                      aria-describedby="name-hint"
-                    />
-                    <span id="name-hint" className="sr-only">请输入您的姓名，最多100个字符</span>
-                  </div>
-                  <div>
-                    <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">邮箱</label>
-                    <input
-                      type="email"
-                      id="email"
-                      name="email"
-                      value={formState.email}
-                      onChange={(e) => handleChange('email', e.target.value)}
-                      className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-red-500 focus:border-transparent outline-none transition-all duration-300"
-                      placeholder="your@email.com"
-                      required
-                      maxLength={254}
-                      aria-describedby="email-hint"
-                    />
-                    <span id="email-hint" className="sr-only">请输入有效的邮箱地址</span>
-                  </div>
-                  <div>
-                    <label htmlFor="message" className="block text-sm font-medium text-gray-700 mb-2">留言</label>
-                    <textarea
-                      id="message"
-                      name="message"
-                      value={formState.message}
-                      onChange={(e) => handleChange('message', e.target.value)}
-                      rows={4}
-                      className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-red-500 focus:border-transparent outline-none transition-all duration-300 resize-none"
-                      placeholder="写下你想说的话..."
-                      required
-                      maxLength={2000}
-                      aria-describedby="message-hint"
-                    />
-                    <span id="message-hint" className="sr-only">请输入您的留言，最多2000个字符</span>
-                  </div>
-                  <motion.button
-                    type="submit"
-                    disabled={isSubmitting}
-                    className="w-full py-4 bg-gradient-to-r from-red-600 to-orange-500 text-white font-semibold rounded-xl shadow-lg shadow-red-500/30 hover:shadow-red-500/50 disabled:opacity-70 transition-all duration-300"
-                    whileHover={{ scale: isSubmitting ? 1 : 1.02 }}
-                    whileTap={{ scale: isSubmitting ? 1 : 0.98 }}
-                    aria-disabled={isSubmitting}
-                  >
-                    {isSubmitting ? (
-                      <span className="flex items-center justify-center gap-2" role="status" aria-live="polite">
-                        <svg className="animate-spin w-5 h-5" fill="none" viewBox="0 0 24 24" aria-hidden="true">
-                          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
-                        </svg>
-                        发送中...
-                      </span>
-                    ) : (
-                      '发送消息'
-                    )}
-                  </motion.button>
-                </form>
+        <div className="grid md:grid-cols-2 gap-8 mb-16">
+          {contactMethods.map((method, index) => (
+            <motion.a
+              key={method.label}
+              href={method.href || undefined}
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, delay: index * 0.15, ease: "easeOut" }}
+              className={`group relative flex items-center gap-5 p-6 bg-white rounded-2xl shadow-lg shadow-gray-200/50 hover:shadow-xl hover:shadow-red-500/10 transition-all duration-500 ${method.href ? 'cursor-pointer' : 'cursor-default'}`}
+              aria-label={`${method.label}: ${method.value}`}
+            >
+              <div className={`relative w-14 h-14 rounded-2xl bg-gradient-to-br ${method.color} flex items-center justify-center text-white shadow-lg group-hover:scale-110 transition-transform duration-300`}>
+                {method.icon}
+              </div>
+              <div className="flex-1">
+                <p className="text-sm text-gray-500 font-medium mb-1">{method.label}</p>
+                <p className="text-lg font-semibold text-gray-900 group-hover:text-red-600 transition-colors duration-300">
+                  {method.value}
+                </p>
+              </div>
+              {method.href && (
+                <div className="absolute top-4 right-4 w-2 h-2 rounded-full bg-green-400 opacity-0 group-hover:opacity-100 transition-opacity" />
               )}
-            </div>
-          </motion.div>
+            </motion.a>
+          ))}
+        </div>
 
-          <motion.div
-            initial={{ opacity: 0, x: 40 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8, ease: "easeOut" }}
-            className="space-y-8"
-          >
-            <div className="bg-white p-8 rounded-2xl shadow-lg shadow-gray-200/50">
-              <h3 className="text-2xl font-bold text-gray-900 mb-6">其他联系方式</h3>
-              <div className="space-y-4">
-                <a
+        <motion.div
+          initial={{ opacity: 0, y: 40 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.8, delay: 0.3, ease: "easeOut" }}
+          className="mb-16"
+        >
+          <div className="bg-gradient-to-br from-red-500 via-orange-500 to-yellow-500 rounded-3xl p-1">
+            <div className="bg-white rounded-[22px] p-8 md:p-12">
+              <div className="flex flex-col md:flex-row items-center justify-between gap-8">
+                <div className="text-center md:text-left">
+                  <h3 className="text-2xl md:text-3xl font-bold text-gray-900 mb-3">
+                    期待与你合作
+                  </h3>
+                  <p className="text-gray-600 max-w-md">
+                    无论是项目合作、技术咨询还是职业机会，我都非常乐意与你交流。
+                    期待收到你的消息！
+                  </p>
+                </div>
+                <motion.a
                   href="mailto:hello@example.com"
-                  className="flex items-center gap-4 p-4 bg-gray-50 rounded-xl hover:bg-red-50 transition-colors duration-300 group"
-                  aria-label="发送邮件至 hello@example.com"
+                  className="group relative inline-flex items-center justify-center px-8 py-4 bg-gradient-to-r from-red-600 to-orange-500 text-white font-semibold rounded-full shadow-xl shadow-red-500/30 overflow-hidden whitespace-nowrap"
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  aria-label="发送邮件联系"
                 >
-                  <div className="w-12 h-12 bg-red-100 rounded-xl flex items-center justify-center group-hover:bg-red-200 transition-colors">
-                    <svg className="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                  <motion.span
+                    className="absolute inset-0 bg-gradient-to-r from-orange-500 to-red-600"
+                    initial={{ x: '100%' }}
+                    whileHover={{ x: 0 }}
+                    transition={{ duration: 0.3 }}
+                  />
+                  <span className="relative z-10 flex items-center gap-2">
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                     </svg>
-                  </div>
-                  <div>
-                    <p className="text-sm text-gray-500">邮箱</p>
-                    <p className="font-medium text-gray-900">hello@example.com</p>
-                  </div>
-                </a>
+                    发送邮件
+                  </span>
+                </motion.a>
               </div>
             </div>
+          </div>
+        </motion.div>
 
-            <div className="bg-white p-8 rounded-2xl shadow-lg shadow-gray-200/50">
-              <h3 className="text-2xl font-bold text-gray-900 mb-6">社交媒体</h3>
-              <div className="flex gap-4" role="list" aria-label="社交媒体链接">
-                {socialLinks.map((social) => (
-                  <motion.a
-                    key={social.name}
-                    href={social.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="w-14 h-14 bg-gray-50 rounded-xl flex items-center justify-center text-gray-600 hover:bg-red-50 hover:text-red-600 transition-all duration-300"
-                    whileHover={{ y: -4 }}
-                    whileTap={{ scale: 0.95 }}
-                    aria-label={`访问我的 ${social.name}`}
-                    role="listitem"
-                  >
-                    {social.icon}
-                  </motion.a>
-                ))}
-              </div>
-            </div>
-
-            <div className="bg-gradient-to-br from-red-500 to-orange-500 p-8 rounded-2xl text-white" role="region" aria-label="合作邀请">
-              <h3 className="text-2xl font-bold mb-4">期待合作</h3>
-              <p className="text-red-100 leading-relaxed">
-                无论是项目合作、技术咨询还是职业机会，我都非常乐意与你交流。
-                期待收到你的消息！
-              </p>
-            </div>
-          </motion.div>
-        </div>
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6, delay: 0.4, ease: "easeOut" }}
+          className="text-center"
+        >
+          <h3 className="text-xl font-bold text-gray-900 mb-6">关注我的社交媒体</h3>
+          <div className="flex justify-center gap-4 mb-8">
+            {socialLinks.map((social) => (
+              <motion.a
+                key={social.name}
+                href={social.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group relative w-16 h-16 bg-white rounded-2xl flex items-center justify-center text-gray-600 shadow-lg shadow-gray-200/50 hover:shadow-xl hover:shadow-red-500/10 transition-all duration-300 overflow-hidden"
+                whileHover={{ y: -6 }}
+                whileTap={{ scale: 0.95 }}
+                aria-label={`访问我的 ${social.name}`}
+              >
+                <span className="absolute inset-0 bg-gradient-to-br from-red-500 to-orange-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                <span className="relative z-10 text-gray-600 group-hover:text-white transition-colors duration-300">
+                  {social.icon}
+                </span>
+              </motion.a>
+            ))}
+          </div>
+          <p className="text-sm text-gray-500">
+            第一时间获取我的最新动态和项目分享
+          </p>
+        </motion.div>
       </div>
     </section>
   );
