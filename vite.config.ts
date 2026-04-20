@@ -1,8 +1,17 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 
-// https://vite.dev/config/
+const getBase = () => {
+  if (process.env.VITE_BASE_PATH) {
+    return process.env.VITE_BASE_PATH
+  }
+  if (process.env.NODE_ENV === 'production') {
+    return '/my-portfolio/'
+  }
+  return '/'
+}
+
 export default defineConfig({
   plugins: [react()],
-  base: '/my-portfolio/',
+  base: getBase(),
 })
