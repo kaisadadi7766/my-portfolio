@@ -1,6 +1,47 @@
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { useRef } from 'react';
 
+const codeSnippets = [
+  { code: 'const developer = () => {}', x: '8%', y: '15%', delay: 0, duration: 20 },
+  { code: 'import AI from "brain"', x: '82%', y: '12%', delay: 2, duration: 25 },
+  { code: 'useState<any>()', x: '78%', y: '55%', delay: 4, duration: 22 },
+  { code: 'function render() {', x: '3%', y: '60%', delay: 1, duration: 18 },
+  { code: 'return <Hero />', x: '65%', y: '85%', delay: 3, duration: 24 },
+  { code: 'async function fetch() {', x: '15%', y: '75%', delay: 5, duration: 28 },
+  { code: 'export default App', x: '88%', y: '40%', delay: 1.5, duration: 23 },
+  { code: 'const [data, setData]', x: '50%', y: '10%', delay: 3.5, duration: 21 },
+  { code: '.map(item => <>)', x: '25%', y: '85%', delay: 2.5, duration: 26 },
+  { code: 'if (user.isActive)', x: '70%', y: '70%', delay: 4.5, duration: 19 },
+];
+
+function FloatingCodeBlocks() {
+  return (
+    <div className="absolute inset-0 overflow-hidden pointer-events-none">
+      {codeSnippets.map((snippet, i) => (
+        <motion.div
+          key={i}
+          className="absolute px-3 py-1.5 bg-white/10 backdrop-blur-sm border border-red-200/30 rounded-lg text-xs font-mono text-red-600"
+          style={{ left: snippet.x, top: snippet.y }}
+          animate={{
+            y: [0, -20, 0],
+            x: [0, 10, 0],
+            opacity: [0.15, 0.25, 0.15],
+            rotate: [0, 3, 0],
+          }}
+          transition={{
+            duration: snippet.duration,
+            delay: snippet.delay,
+            repeat: Infinity,
+            ease: 'easeInOut',
+          }}
+        >
+          {snippet.code}
+        </motion.div>
+      ))}
+    </div>
+  );
+}
+
 export default function Hero() {
   const ref = useRef(null);
   const { scrollY } = useScroll();
@@ -30,6 +71,7 @@ export default function Hero() {
     <section id="hero" className="min-h-screen flex items-center justify-center relative overflow-hidden pt-20" ref={ref} aria-labelledby="hero-heading">
       <h1 id="hero-heading" className="sr-only">全栈开发者 - 个人作品集</h1>
       <div className="absolute inset-0 bg-gradient-to-br from-red-50 via-orange-50 to-yellow-50" />
+      <FloatingCodeBlocks />
 
       <motion.div
         className="absolute top-20 right-0 w-[500px] h-[500px] bg-gradient-to-br from-red-400/20 to-orange-400/20 rounded-full blur-[100px]"

@@ -1,107 +1,169 @@
 import { motion } from 'framer-motion';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 
-export default function Loading() {
-  const [isLoading, setIsLoading] = useState(true);
+const codeSnippets = [
+  { code: 'const developer = () => {}', x: '10%', y: '15%', delay: 0, duration: 20 },
+  { code: 'import AI from "brain"', x: '80%', y: '12%', delay: 2, duration: 25 },
+  { code: 'useState<any>()', x: '75%', y: '60%', delay: 4, duration: 22 },
+  { code: 'function render() {', x: '5%', y: '65%', delay: 1, duration: 18 },
+  { code: 'return <Hero />', x: '60%', y: '85%', delay: 3, duration: 24 },
+];
 
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setIsLoading(false);
-    }, 2500);
-    return () => clearTimeout(timer);
-  }, []);
+function FloatingCodeBlocks() {
+  return (
+    <div className="absolute inset-0 overflow-hidden pointer-events-none">
+      {codeSnippets.map((snippet, i) => (
+        <motion.div
+          key={i}
+          className="absolute px-3 py-1.5 bg-white/10 backdrop-blur-sm border border-red-200/30 rounded-lg text-xs font-mono text-red-600"
+          style={{ left: snippet.x, top: snippet.y }}
+          animate={{
+            y: [0, -20, 0],
+            x: [0, 10, 0],
+            opacity: [0.15, 0.25, 0.15],
+            rotate: [0, 3, 0],
+          }}
+          transition={{
+            duration: snippet.duration,
+            delay: snippet.delay,
+            repeat: Infinity,
+            ease: 'easeInOut',
+          }}
+        >
+          {snippet.code}
+        </motion.div>
+      ))}
+    </div>
+  );
+}
+
+interface LoadingProps {
+  onStartExit: () => void;
+  onComplete: () => void;
+}
+
+export default function Loading({ onStartExit, onComplete }: LoadingProps) {
+  const [progress, setProgress] = useState(0);
+  const [isExiting, setIsExiting] = useState(false);
+  const [isDone, setIsDone] = useState(false);
+  const progressRef = useRef(0);
 
   useEffect(() => {
     const interval = setInterval(() => {
-      const el = document.getElementById('loading-circle');
-      if (el) {
-        el.style.strokeDashoffset = '0';
+      const currentProgress = progressRef.current;
+      if (currentProgress >= 100) {
+        clearInterval(interval);
+        return;
       }
-    }, 100);
+      const progressRatio = currentProgress / 100;
+      const baseIncrement = 10 - progressRatio * 7;
+      const increment = Math.random() * 3 + Math.max(baseIncrement, 2);
+      progressRef.current = Math.min(currentProgress + increment, 100);
+      setProgress(progressRef.current);
+    }, 70);
     return () => clearInterval(interval);
   }, []);
 
-  if (!isLoading) return null;
+  useEffect(() => {
+    if (progress >= 100 && !isExiting) {
+      const timer = setTimeout(() => {
+        onStartExit();
+        setIsExiting(true);
+      }, 150);
+      return () => clearTimeout(timer);
+    }
+  }, [progress, isExiting]);
+
+  useEffect(() => {
+    if (isExiting) {
+      const timer = setTimeout(() => {
+        setIsDone(true);
+      }, 500);
+      return () => clearTimeout(timer);
+    }
+  }, [isExiting]);
+
+  useEffect(() => {
+    if (isDone) {
+      onComplete();
+    }
+  }, [isDone, onComplete]);
+
+  if (isDone) return null;
 
   return (
     <motion.div
-      className="fixed inset-0 z-[9999] flex flex-col items-center justify-center bg-white"
+      className="fixed inset-0 z-[9999] flex flex-col items-center justify-center overflow-hidden"
       initial={{ opacity: 1 }}
-      animate={{ opacity: 0 }}
-      transition={{ duration: 0.6, delay: 2 }}
+      animate={{ opacity: isExiting ? 0 : 1 }}
+      transition={{ duration: 0.5, ease: 'easeOut' }}
     >
-      <div className="relative flex flex-col items-center">
+      <div className="absolute inset-0 bg-gradient-to-br from-red-50 via-orange-50 to-yellow-50" />
+      <FloatingCodeBlocks />
+
+      <div className="absolute top-20 right-0 w-[500px] h-[500px] bg-gradient-to-br from-red-400/20 to-orange-400/20 rounded-full blur-[100px]" />
+      <div className="absolute bottom-20 left-0 w-[400px] h-[400px] bg-gradient-to-br from-orange-400/20 to-yellow-400/20 rounded-full blur-[80px]" />
+      <div className="absolute top-1/3 left-1/4 w-64 h-64 bg-red-300/10 rounded-full blur-[60px] animate-[float_8s_ease-in-out_infinite]" />
+
+      <div className="relative z-10 flex flex-col items-center">
         <motion.div
           className="relative w-28 h-28 flex items-center justify-center"
-          animate={{ scale: [1, 1.1, 1] }}
-          transition={{ duration: 1.2, repeat: Infinity, ease: "easeInOut" }}
+          animate={{ scale: [1, 1.05, 1] }}
+          transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
         >
-          <div className="absolute inset-0 rounded-full bg-gradient-to-br from-red-500 via-orange-500 to-yellow-500 opacity-20" />
-          <div className="absolute inset-2 rounded-full bg-gradient-to-br from-red-500 via-orange-500 to-yellow-500 opacity-40" />
-          <div className="absolute inset-4 rounded-full bg-gradient-to-br from-red-500 to-orange-500 flex items-center justify-center">
-            <span className="text-3xl font-bold text-white">P</span>
+          <div className="absolute inset-0 rounded-full bg-gradient-to-br from-red-500/20 via-orange-500/20 to-yellow-500/20 blur-xl" />
+          <div className="absolute inset-0 rounded-full bg-gradient-to-br from-white/40 to-transparent" />
+          <div className="relative w-full h-full rounded-full bg-gradient-to-br from-red-500 via-orange-500 to-yellow-500 shadow-lg shadow-orange-500/30 backdrop-blur-md border border-white/30">
+            <div className="absolute inset-0 rounded-full bg-gradient-to-tr from-white/40 via-transparent to-transparent" />
+            <div className="absolute top-3 left-4 w-8 h-3 rounded-full bg-white/30 blur-sm" />
+            <div className="absolute inset-0 flex items-center justify-center">
+              <span className="text-3xl font-bold text-white drop-shadow-lg">P</span>
+            </div>
           </div>
-
-          <svg className="absolute inset-0 w-full h-full" viewBox="0 0 112 112">
-            <circle
-              id="loading-circle"
-              cx="56"
-              cy="56"
-              r="52"
-              fill="none"
-              stroke="url(#gradient)"
-              strokeWidth="4"
-              strokeLinecap="round"
-              strokeDasharray="327"
-              strokeDashoffset="327"
-              style={{
-                transition: 'stroke-dashoffset 2s ease-out'
-              }}
-            />
-            <defs>
-              <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                <stop offset="0%" stopColor="#ef4444" />
-                <stop offset="50%" stopColor="#f97316" />
-                <stop offset="100%" stopColor="#eab308" />
-              </linearGradient>
-            </defs>
-          </svg>
+          <div className="absolute -inset-4 rounded-full border border-orange-200/30 animate-pulse" />
+          <div className="absolute -inset-8 rounded-full border border-red-100/20 animate-pulse" style={{ animationDelay: '0.5s' }} />
         </motion.div>
 
         <motion.div
-          className="mt-8"
-          initial={{ opacity: 0, y: 10 }}
+          className="mt-10"
+          initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3 }}
+          transition={{ delay: 0.3, duration: 0.8 }}
         >
-          <h2 className="text-2xl font-bold bg-gradient-to-r from-red-600 via-orange-500 to-yellow-500 bg-clip-text text-transparent">
+          <h2 className="text-2xl font-bold bg-gradient-to-r from-red-600 via-orange-500 to-yellow-500 bg-clip-text text-transparent tracking-wide">
             Portfolio
           </h2>
         </motion.div>
 
         <motion.div
-          className="mt-4 flex gap-1.5"
+          className="mt-6 w-48 h-1.5 bg-gray-200/80 rounded-full overflow-hidden backdrop-blur-sm"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.4 }}
+        >
+          <motion.div
+            className="h-full bg-gradient-to-r from-red-500 via-orange-500 to-yellow-500 rounded-full"
+            initial={{ width: 0 }}
+            animate={{ width: `${progress}%` }}
+            transition={{ duration: 0.05 }}
+          />
+        </motion.div>
+
+        <motion.div
+          className="mt-3"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.5 }}
         >
-          {[0, 1, 2].map((i) => (
-            <motion.div
-              key={i}
-              className="w-2 h-2 rounded-full bg-gradient-to-r from-red-500 to-orange-500"
-              animate={{
-                y: [0, -8, 0],
-                opacity: [0.5, 1, 0.5]
-              }}
-              transition={{
-                duration: 0.6,
-                repeat: Infinity,
-                delay: i * 0.15,
-                ease: "easeInOut"
-              }}
-            />
-          ))}
+          <span className="text-sm font-medium text-orange-600/80">{Math.round(progress)}%</span>
         </motion.div>
+
+        <motion.div
+          className="mt-3 h-px w-16 bg-gradient-to-r from-transparent via-orange-300 to-transparent"
+          initial={{ scaleX: 0, opacity: 0 }}
+          animate={{ scaleX: 1, opacity: 1 }}
+          transition={{ delay: 0.6, duration: 0.8 }}
+        />
       </div>
     </motion.div>
   );

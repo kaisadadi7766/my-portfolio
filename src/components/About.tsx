@@ -85,33 +85,32 @@ function TechCard({ tech, index }: { tech: typeof aiTechnologies[0], index: numb
       onMouseLeave={() => setIsHovered(false)}
       className="relative group"
     >
-      <div className="absolute inset-0 bg-gradient-to-r opacity-0 group-hover:opacity-100 transition-opacity duration-500" style={{background: `linear-gradient(135deg, ${tech.color.includes('blue') ? '#3B82F6, #06B6D4' : tech.color.includes('purple') ? '#A855F7, #EC4899' : '#10B981, #14B8A6'})`}} />
-      <div className="relative bg-white rounded-2xl p-6 shadow-lg border border-gray-100 group-hover:border-transparent transition-all duration-500 h-full">
-        <div className={`w-16 h-16 rounded-2xl bg-gradient-to-br ${tech.color} flex items-center justify-center text-white mb-5 shadow-lg group-hover:scale-110 transition-transform duration-300`}>
+      <div className="relative bg-white rounded-xl sm:rounded-2xl p-4 sm:p-5 md:p-6 shadow-md sm:shadow-lg border border-gray-100 group-hover:border-transparent transition-all duration-500 h-full">
+        <div className={`w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 rounded-xl sm:rounded-2xl bg-gradient-to-br ${tech.color} flex items-center justify-center text-white mb-4 sm:mb-5 shadow-md group-hover:scale-110 transition-transform duration-300`}>
           {tech.icon}
         </div>
-        <h4 className="text-xl font-bold text-gray-800 mb-1">{tech.name}</h4>
-        <p className="text-sm text-purple-600 font-medium mb-3">{tech.fullName}</p>
-        <p className="text-gray-600 text-sm leading-relaxed mb-4">{tech.description}</p>
+        <h4 className="text-lg sm:text-xl font-bold text-gray-800 mb-1">{tech.name}</h4>
+        <p className="text-xs sm:text-sm text-purple-600 font-medium mb-2 sm:mb-3">{tech.fullName}</p>
+        <p className="text-gray-600 text-xs sm:text-sm leading-relaxed mb-3 sm:mb-4">{tech.description}</p>
 
-        <div className="flex flex-wrap gap-2 mb-4">
+        <div className="flex flex-wrap gap-1.5 sm:gap-2 mb-3 sm:mb-4">
           {tech.useCases.map((useCase) => (
             <span
               key={useCase}
-              className="px-3 py-1 bg-gradient-to-r from-gray-50 to-gray-100 text-gray-600 rounded-full text-xs font-medium"
+              className="px-2 sm:px-3 py-0.5 sm:py-1 bg-gradient-to-r from-gray-50 to-gray-100 text-gray-600 rounded-full text-xs font-medium"
             >
               {useCase}
             </span>
           ))}
         </div>
 
-        <div className="pt-3 border-t border-gray-100">
-          <p className="text-xs text-gray-400 font-medium mb-2">核心技术</p>
+        <div className="pt-2 sm:pt-3 border-t border-gray-100">
+          <p className="text-xs text-gray-400 font-medium mb-1.5 sm:mb-2">核心技术</p>
           <div className="flex flex-wrap gap-1">
             {tech.details?.map((detail) => (
               <span
                 key={detail}
-                className={`px-2 py-0.5 rounded text-xs font-medium ${
+                className={`px-1.5 sm:px-2 py-0.5 rounded text-xs font-medium ${
                   tech.color.includes('blue') ? 'bg-blue-50 text-blue-600' :
                   tech.color.includes('purple') ? 'bg-purple-50 text-purple-600' :
                   'bg-emerald-50 text-emerald-600'
@@ -124,7 +123,7 @@ function TechCard({ tech, index }: { tech: typeof aiTechnologies[0], index: numb
         </div>
 
         <motion.div
-          className="absolute top-4 right-4 w-2 h-2 rounded-full bg-green-400 opacity-0 group-hover:opacity-100 transition-opacity"
+          className="absolute top-3 sm:top-4 right-3 sm:right-4 w-2 h-2 rounded-full bg-green-400 opacity-0 group-hover:opacity-100 transition-opacity"
           animate={isHovered ? { scale: [1, 1.5, 1], opacity: [1, 0, 1] } : {}}
           transition={{ duration: 1.5, repeat: Infinity }}
         />
@@ -245,86 +244,20 @@ export default function About() {
               </p>
             </div>
 
-            <div className="grid md:grid-cols-3 gap-8">
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
               {aiTechnologies.map((tech, index) => (
                 <TechCard key={tech.name} tech={tech} index={index} />
               ))}
             </div>
           </motion.div>
 
-          <motion.div variants={itemVariants} className="mb-20">
-            <div className="text-center mb-8">
-              <h4 className="text-2xl font-bold text-gray-800 mb-2">RAG 系统架构</h4>
-              <p className="text-gray-600 text-sm">检索增强生成完整工作流程</p>
+          <motion.div variants={itemVariants} className="mb-12 sm:mb-16">
+            <div className="text-center mb-6 sm:mb-8">
+              <h4 className="text-xl sm:text-2xl font-bold text-gray-800 mb-2">技术工具栈</h4>
+              <p className="text-gray-600 text-xs sm:text-sm">常用 AI 开发工具与平台</p>
             </div>
 
-            <div className="bg-gradient-to-br from-purple-50 via-white to-pink-50 rounded-3xl p-8 border border-purple-100 shadow-xl">
-              <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-8">
-                {[
-                  { icon: '📄', title: '数据源', desc: '文档、网页、数据库', color: 'bg-blue-500' },
-                  { icon: '⚙️', title: '处理引擎', desc: 'LangChain/LlamaIndex', color: 'bg-purple-500' },
-                  { icon: '🧮', title: '嵌入模型', desc: 'text-embedding-3-large', color: 'bg-pink-500' },
-                  { icon: '💾', title: '向量存储', desc: 'ChromaDB / FAISS', color: 'bg-emerald-500' },
-                  { icon: '🔍', title: '语义检索', desc: '余弦相似度 Top-K', color: 'bg-orange-500' },
-                  { icon: '🤖', title: 'LLM 生成', desc: 'MiniMax / GLM', color: 'bg-red-500' }
-                ].map((item, index) => (
-                  <motion.div
-                    key={item.title}
-                    initial={{ opacity: 0, scale: 0.9 }}
-                    whileInView={{ opacity: 1, scale: 1 }}
-                    viewport={{ once: true }}
-                    transition={{ delay: index * 0.1 }}
-                    className="flex items-center gap-3 p-3 bg-white rounded-xl shadow-sm"
-                  >
-                    <div className={`w-10 h-10 ${item.color} rounded-lg flex items-center justify-center text-white text-lg`}>
-                      {item.icon}
-                    </div>
-                    <div>
-                      <p className="text-sm font-semibold text-gray-800">{item.title}</p>
-                      <p className="text-xs text-gray-500">{item.desc}</p>
-                    </div>
-                  </motion.div>
-                ))}
-              </div>
-
-              <div className="relative bg-white rounded-2xl p-6 border border-gray-200">
-                <div className="flex items-center justify-between mb-4">
-                  <span className="text-sm font-medium text-gray-600">数据流向</span>
-                  <span className="text-xs text-purple-600 bg-purple-50 px-2 py-1 rounded-full">实时处理</span>
-                </div>
-
-                <div className="flex flex-wrap items-center justify-center gap-3">
-                  {['用户查询', '向量化', '相似度匹配', '上下文构建', 'LLM 生成', '返回答案'].map((step, index) => (
-                    <motion.div
-                      key={step}
-                      initial={{ opacity: 0, x: -10 }}
-                      whileInView={{ opacity: 1, x: 0 }}
-                      viewport={{ once: true }}
-                      transition={{ delay: index * 0.15 }}
-                      className="flex items-center"
-                    >
-                      <div className="px-4 py-2 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-lg text-sm font-medium shadow-md">
-                        {step}
-                      </div>
-                      {index < 5 && (
-                        <svg className="w-6 h-6 text-purple-400 mx-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                          <path d="M9 18l6-6-6-6" />
-                        </svg>
-                      )}
-                    </motion.div>
-                  ))}
-                </div>
-              </div>
-            </div>
-          </motion.div>
-
-          <motion.div variants={itemVariants} className="mb-16">
-            <div className="text-center mb-8">
-              <h4 className="text-2xl font-bold text-gray-800 mb-2">技术工具栈</h4>
-              <p className="text-gray-600 text-sm">常用 AI 开发工具与平台</p>
-            </div>
-
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
               {techStack.map((tech, index) => (
                 <motion.div
                   key={tech.name}
@@ -332,15 +265,15 @@ export default function About() {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ delay: index * 0.05 }}
-                  className="p-4 bg-white rounded-xl shadow-sm border border-gray-100 hover:shadow-md hover:border-purple-200 transition-all cursor-default group"
+                  className="p-3 sm:p-4 bg-white rounded-xl shadow-sm border border-gray-100 hover:shadow-md hover:border-purple-200 transition-all cursor-default group"
                 >
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-purple-100 to-pink-100 flex items-center justify-center text-purple-600 font-bold text-sm group-hover:from-purple-500 group-hover:to-pink-500 group-hover:text-white transition-all">
+                  <div className="flex items-center gap-2 sm:gap-3">
+                    <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg bg-gradient-to-br from-purple-100 to-pink-100 flex items-center justify-center text-purple-600 font-bold text-xs sm:text-sm group-hover:from-purple-500 group-hover:to-pink-500 group-hover:text-white transition-all">
                       {tech.name.charAt(0)}
                     </div>
-                    <div>
-                      <p className="text-sm font-medium text-gray-800">{tech.name}</p>
-                      <p className="text-xs text-gray-400">{tech.category}</p>
+                    <div className="min-w-0 flex-1">
+                      <p className="text-xs sm:text-sm font-medium text-gray-800 truncate">{tech.name}</p>
+                      <p className="text-xs text-gray-400 truncate">{tech.category}</p>
                     </div>
                   </div>
                 </motion.div>
@@ -348,11 +281,11 @@ export default function About() {
             </div>
           </motion.div>
 
-          <motion.div variants={itemVariants} className="grid md:grid-cols-3 gap-6">
+          <motion.div variants={itemVariants} className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
             {[
               {
                 icon: (
-                  <svg className="w-8 h-8" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                  <svg className="w-6 h-6 sm:w-8 sm:h-8" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
                     <path d="M12 2L2 7l10 5 10-5-10-5z" />
                     <path d="M2 17l10 5 10-5" />
                     <path d="M2 12l10 5 10-5" />
@@ -364,7 +297,7 @@ export default function About() {
               },
               {
                 icon: (
-                  <svg className="w-8 h-8" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                  <svg className="w-6 h-6 sm:w-8 sm:h-8" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
                     <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83" />
                   </svg>
                 ),
@@ -374,7 +307,7 @@ export default function About() {
               },
               {
                 icon: (
-                  <svg className="w-8 h-8" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                  <svg className="w-6 h-6 sm:w-8 sm:h-8" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
                     <circle cx="12" cy="12" r="3" />
                     <path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83" />
                   </svg>
@@ -392,13 +325,13 @@ export default function About() {
                 transition={{ delay: index * 0.1 }}
                 className="relative group"
               >
-                <div className={`absolute inset-0 bg-gradient-to-br ${item.color} opacity-0 group-hover:opacity-5 transition-opacity duration-500 rounded-2xl`} />
-                <div className="relative p-6 bg-white rounded-2xl shadow-lg border border-gray-100 group-hover:shadow-xl transition-all duration-300 group-hover:-translate-y-1">
-                  <div className={`w-14 h-14 rounded-xl bg-gradient-to-br ${item.color} flex items-center justify-center text-white mb-4 shadow-lg`}>
+                <div className={`absolute inset-0 bg-gradient-to-br ${item.color} opacity-0 group-hover:opacity-5 transition-opacity duration-500 rounded-xl sm:rounded-2xl`} />
+                <div className="relative p-4 sm:p-6 bg-white rounded-xl sm:rounded-2xl shadow-md sm:shadow-lg border border-gray-100 group-hover:shadow-xl transition-all duration-300 group-hover:-translate-y-1">
+                  <div className={`w-12 h-12 sm:w-14 sm:h-14 rounded-xl bg-gradient-to-br ${item.color} flex items-center justify-center text-white mb-3 sm:mb-4 shadow-md`}>
                     {item.icon}
                   </div>
-                  <h5 className="text-lg font-bold text-gray-800 mb-2">{item.title}</h5>
-                  <p className="text-sm text-gray-600 leading-relaxed">{item.desc}</p>
+                  <h5 className="text-base sm:text-lg font-bold text-gray-800 mb-2">{item.title}</h5>
+                  <p className="text-xs sm:text-sm text-gray-600 leading-relaxed">{item.desc}</p>
                 </div>
               </motion.div>
             ))}
