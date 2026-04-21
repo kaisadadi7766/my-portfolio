@@ -1,6 +1,8 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 
+import { cloudflare } from "@cloudflare/vite-plugin";
+
 const getBase = () => {
   if (process.env.VITE_BASE_PATH) {
     return process.env.VITE_BASE_PATH
@@ -18,6 +20,6 @@ const getBase = () => {
 // - EdgeOne Pages: VITE_BASE_PATH=/ npm run build（覆盖为根路径 /）
 
 export default defineConfig({
-  plugins: [react()],
+  plugins: [react(), cloudflare()],
   base: getBase(),
 })
