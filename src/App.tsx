@@ -9,21 +9,16 @@ import Loading from './components/Loading';
 import CursorGlow from './components/CursorGlow';
 
 function App() {
-  const [isLoading, setIsLoading] = useState(true);
   const [showContent, setShowContent] = useState(false);
 
   const handleLoadingStartExit = () => {
     setShowContent(true);
   };
 
-  const handleLoadingComplete = () => {
-    setIsLoading(false);
-  };
-
   return (
     <>
       <CursorGlow />
-      <Loading onStartExit={handleLoadingStartExit} onComplete={handleLoadingComplete} />
+      <Loading onStartExit={handleLoadingStartExit} onComplete={() => {}} />
       <div className={`${showContent ? 'opacity-100' : 'opacity-0'} transition-opacity duration-700`}>
         <Header />
         <main>
