@@ -6,7 +6,6 @@ import Projects from './components/Projects';
 import Contact from './components/Contact';
 import Footer from './components/Footer';
 import Loading from './components/Loading';
-import CursorGlow from './components/CursorGlow';
 
 function App() {
   const [showContent, setShowContent] = useState(false);
@@ -17,7 +16,6 @@ function App() {
 
   return (
     <>
-      <CursorGlow />
       <Loading onStartExit={handleLoadingStartExit} onComplete={() => {}} />
       <div className={`${showContent ? 'opacity-100' : 'opacity-0'} transition-opacity duration-700`}>
         <Header />
